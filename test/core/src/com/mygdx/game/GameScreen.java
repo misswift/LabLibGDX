@@ -84,8 +84,6 @@ public class GameScreen implements Screen {
 			home.y = (int) touchPos.y;
 		}
 
-		// TODO
-
 
 		if (TimeUtils.nanoTime() - lastDropTime > 1000000000){spawnRaindrop();}
 		Iterator<Rectangle> iter = snowdrops.iterator();
@@ -113,14 +111,11 @@ public class GameScreen implements Screen {
 		game.batch.end();
 	}
 
-
-
 	@Override
 	public void dispose () {
 		snowImg.dispose();
 		homeImg.dispose();
 		rainMusic.dispose();
-
 	}
 
 	@Override
@@ -130,21 +125,17 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-
 	}
 
 	@Override
 	public void pause() {
-
 	}
 
 	@Override
 	public void resume() {
-
 	}
 
 	@Override
 	public void hide() {
-
 	}
 }
