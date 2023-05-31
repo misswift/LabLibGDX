@@ -24,9 +24,9 @@ public class GameScreen implements Screen {
 	final Drop game;
 	OrthographicCamera camera;
 	SpriteBatch batch;
-	Texture snowImg;
+	Texture backgroundImg;
 	Texture homeImg;
-
+	Texture snowImg;
 	Music rainMusic;
 	Rectangle home;
 	Rectangle snow;
@@ -44,15 +44,16 @@ public class GameScreen implements Screen {
 		batch = new SpriteBatch();
 		snowImg = new Texture("snow.png");
 		homeImg = new Texture("home.png");
-		rainMusic = Gdx.audio.newMusic(Gdx.files.internal("undertreeinrain.mp3"));
+		backgroundImg = new Texture("background.png");
+		rainMusic = Gdx.audio.newMusic(Gdx.files.internal("undertreeinsnow.mp3"));
 		rainMusic.setLooping(true);
 		rainMusic.play();
 		home = new Rectangle();
 		snow = new Rectangle();
-		home.x = 0;
+		home.x = 120;
 		home.y = 0;
-		home.width = 64;
-		home.height = 64;
+		home.width = 400;
+		home.height = 270;
 
 		snowdrops = new Array<Rectangle>();
 		spawnRaindrop();
@@ -79,8 +80,8 @@ public class GameScreen implements Screen {
 		if (Gdx.input.isTouched()) {
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(touchPos);
-			home.x = (int) touchPos.x ;
-			home.y = (int) touchPos.y ;
+			home.x = (int) touchPos.x;
+			home.y = (int) touchPos.y;
 		}
 
 		// TODO
@@ -99,9 +100,12 @@ public class GameScreen implements Screen {
 		}
 
 		game.batch.begin();
+		game.batch.draw(backgroundImg, 0, 0, 800, 600);
+
 		game.batch.draw(homeImg, 100, 0, 400, 300);
+
 		game.font.setColor(Color.BLACK);
-		game.font.draw(game.batch, "SNOW COUNT: " + snowsGatchered, 0, 480);
+		game.font.draw(game.batch, "SNOW COUNT: " + snowsGatchered, 100, 480);
 
 		for (Rectangle snowdrop: snowdrops){
 			game.batch.draw(snowImg, snowdrop.x, snowdrop.y, 20, 20);
