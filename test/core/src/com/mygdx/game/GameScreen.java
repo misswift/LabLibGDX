@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -23,15 +24,16 @@ public class GameScreen implements Screen {
 	final Drop game;
 	OrthographicCamera camera;
 	SpriteBatch batch;
-	Texture dropImg;
+	Texture snowImg;
 	Texture homeImg;
 
 	Music rainMusic;
 	Rectangle home;
+	Rectangle snow;
 	Vector3 touchPos;
-	Array<Rectangle> raindrops;
+	Array<Rectangle> snowdrops;
 	long lastDropTime;
-	int dropsGatchered;
+	int snowsGatchered;
 
 
 	public GameScreen (final Drop gam) {
@@ -40,18 +42,19 @@ public class GameScreen implements Screen {
 		touchPos = new Vector3();
 		camera.setToOrtho(false, 800,480);
 		batch = new SpriteBatch();
-		dropImg = new Texture("droplet.png");
+		snowImg = new Texture("snow.png");
 		homeImg = new Texture("home.png");
 		rainMusic = Gdx.audio.newMusic(Gdx.files.internal("undertreeinrain.mp3"));
 		rainMusic.setLooping(true);
 		rainMusic.play();
 		home = new Rectangle();
+		snow = new Rectangle();
 		home.x = 0;
 		home.y = 0;
 		home.width = 64;
 		home.height = 64;
 
-		raindrops = new Array<Rectangle>();
+		snowdrops = new Array<Rectangle>();
 		spawnRaindrop();
 	}
 	public  void spawnRaindrop(){
@@ -60,7 +63,7 @@ public class GameScreen implements Screen {
 		rainDrop.y = 480;
 		rainDrop.width = 64;
 		rainDrop.height = 64;
-		raindrops.add(rainDrop);
+		snowdrops.add(rainDrop);
 
 		lastDropTime = TimeUtils.nanoTime();
 	}
@@ -76,31 +79,32 @@ public class GameScreen implements Screen {
 		if (Gdx.input.isTouched()) {
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(touchPos);
-			home.x = (int) touchPos.x - 64 / 2;
-			home.y = (int) touchPos.y - 64 / 2;
+			home.x = (int) touchPos.x ;
+			home.y = (int) touchPos.y ;
 		}
 
 		// TODO
 
 
 		if (TimeUtils.nanoTime() - lastDropTime > 1000000000){spawnRaindrop();}
-		Iterator<Rectangle> iter = raindrops.iterator();
+		Iterator<Rectangle> iter = snowdrops.iterator();
 
 		while (iter.hasNext()) {
 			Rectangle raindrop = iter.next();
 			raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
 			if (raindrop.y + 64 < 0) iter.remove();
 			if (raindrop.overlaps(home)) {
-				dropsGatchered++;
+				snowsGatchered++;
 				iter.remove();}
 		}
 
 		game.batch.begin();
 		game.batch.draw(homeImg, 100, 0, 400, 300);
-		game.font.draw(game.batch, "SNOW COUNT: " , 0, 480);
+		game.font.setColor(Color.BLACK);
+		game.font.draw(game.batch, "SNOW COUNT: " + snowsGatchered, 0, 480);
 
-		for (Rectangle raindrop: raindrops){
-			game.batch.draw(dropImg, raindrop.x, raindrop.y);
+		for (Rectangle snowdrop: snowdrops){
+			game.batch.draw(snowImg, snowdrop.x, snowdrop.y, 20, 20);
 		}
 		game.batch.end();
 	}
@@ -109,7 +113,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose () {
-		dropImg.dispose();
+		snowImg.dispose();
 		homeImg.dispose();
 		rainMusic.dispose();
 

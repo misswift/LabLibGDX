@@ -28,6 +28,7 @@ public class Drop extends Game {
     @Override
     public void dispose() {
         super.dispose();
-        // TODO
+        batch.dispose();
+        font.dispose();
     }
 }
